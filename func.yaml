@@ -1,0 +1,12 @@
+specVersion: 0.35.0
+name: hello
+runtime: python
+registry: docker.io/bdenz001
+image: docker.io/bdenz001/hello:latest
+imageDigest: sha256:79cc8922889d600b6e7e43e9037c0ba14a08c3f4f4bdd759f42b46e5acf3790b
+created: 2023-05-06T18:27:03.012499361-06:00
+build:
+  builder: pack
+  pvcSize: 256Mi
+deploy:
+  namespace: default
