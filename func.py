@@ -1,63 +1,31 @@
-from parliament import Context
-from flask import Request
-import json
+from torchvision import models, torch, transforms
+from PIL import Image
 
+# Load the pre-trained model
+model = models.alexnet(pretrained=True)
 
-# parse request body, json data or URL query parameters
-def payload_print(req: Request) -> str:
-    if req.method == "POST":
-        if req.is_json:
-            return json.dumps(req.json) + "\n"
-        else:
-            # MultiDict needs some iteration
-            ret = "{"
+# Define image transformation pipeline
+transform = transforms.Compose([
+    transforms.Resize(256),
+    transforms.CenterCrop(224),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
-            for key in req.form.keys():
-                ret += '"' + key + '": "'+ req.form[key] + '", '
+# Load and preprocess the input image
+img = Image.open("dog.jpg")
+img_t = transform(img)
+batch_t = torch.unsqueeze(img_t, 0)
 
-            return ret[:-2] + "}\n" if len(ret) > 2 else "{}"
+# Set the model to evaluation mode and run the input image batch through it
+model.eval()
+out = model(batch_t)
 
-    elif req.method == "GET":
-        # MultiDict needs some iteration
-        ret = "{"
+# Load the ImageNet class labels and find the predicted class index and percentage confidence
+with open('imagenet-classes.txt') as labels:
+    classes = [line.strip() for line in labels.readlines()]
+_, index = torch.max(out, 1)
+percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 
-        for key in req.args.keys():
-            ret += '"' + key + '": "' + req.args[key] + '", '
-
-        return ret[:-2] + "}\n" if len(ret) > 2 else "{}"
-
-
-# pretty print the request to stdout instantaneously
-def pretty_print(req: Request) -> str:
-    ret = str(req.method) + ' ' + str(req.url) + ' ' + str(req.host) + '\n'
-    for (header, values) in req.headers:
-        ret += "  " + str(header) + ": " + values + '\n'
-
-    if req.method == "POST":
-        ret += "Request body:\n"
-        ret += "  " + payload_print(req) + '\n'
-
-    elif req.method == "GET":
-        ret += "URL Query String:\n"
-        ret += "  " + payload_print(req) + '\n'
-
-    return ret
-
- 
-def main(context: Context):
-    """ 
-    Function template
-    The context parameter contains the Flask request object and any
-    CloudEvent received with the request.
-    """
-
-    # Add your business logic here
-    print("Received request")
-
-    if 'request' in context.keys():
-        ret = pretty_print(context.request)
-        print(ret, flush=True)
-        return payload_print(context.request), 200
-    else:
-        print("Empty request", flush=True)
-        return "{}", 200
+# Print the predicted class label and percentage confidence
+print(classes[index[0]], percentage[index[0]].item())
