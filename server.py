@@ -7,6 +7,7 @@ import torch
 
 # Download imagenet-classes.txt if it doesn't exist
 if not os.path.exists('imagenet-classes.txt'):
+    print("Downloading ImageNet classes file...")
     subprocess.run(['wget', 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'])
 
 # Load the pre-trained AlexNet model
