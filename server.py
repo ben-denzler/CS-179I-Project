@@ -1,9 +1,9 @@
 import os
 import subprocess
+import torch
 from flask import Flask, request, jsonify
 from torchvision import models, transforms
 from PIL import Image
-import torch
 
 # Download imagenet-classes.txt if it doesn't exist
 if not os.path.exists('imagenet-classes.txt'):
