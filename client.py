@@ -12,6 +12,18 @@ def list_to_csv(list):
     list = ', '.join(list)
     return list
 
+# Gets positive integer input with error checking
+def get_positive_integer():
+    while True:
+        try:
+            value = int(input())
+            if value >= 0:
+                return value
+            else:
+                print("Invalid input. Please enter a positive integer: ")
+        except ValueError:
+            print("Invalid input. Please enter a positive integer: ")
+
 # Download imagenet-classes.txt if it doesn't exist
 if not os.path.exists('imagenet-classes.txt'):
     print("Downloading ImageNet classes file...")
@@ -35,6 +47,10 @@ print(f"PICS: {list_to_csv(pic_list)}")
 user_pic = input("\nChoose a pic: ")
 while user_pic not in pic_list:
     user_pic = input("That's not a valid pic, please try again: ")
+
+# Get number of requests
+print("\nChoose the number of requests to send: ")
+num_requests = get_positive_integer()
 
 # Send POST request to the `predict` endpoint
 print(f"\nSending request for pic {user_pic} with model {user_model}...")
