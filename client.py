@@ -3,8 +3,9 @@ import subprocess
 import os
 from torchvision import models
 
-# TODO: Client should let user specify the image that is sent for recognition
-# It's probably fine to just download a set of images in the `pics` folder and let the user choose from those
+CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
+CLASSES_FILE = 'imagenet-classes.txt'
+PICS_DIR = './pics'
 
 # Prints a list as comma-seperated elements
 def list_to_csv(list):
@@ -25,9 +26,9 @@ def get_positive_integer():
             print("Invalid input. Please enter a positive integer: ")
 
 # Download imagenet-classes.txt if it doesn't exist
-if not os.path.exists('imagenet-classes.txt'):
+if not os.path.exists(CLASSES_FILE):
     print("Downloading ImageNet classes file...")
-    subprocess.run(['wget', 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'])
+    subprocess.run(['wget', CLASSES_URL])
 
 # Print the models the user can choose from
 model_list = dir(models)
@@ -40,7 +41,7 @@ while user_model not in model_list:
 print(f"\nSending request with model {user_model}...")
 
 # Print the pics the user can choose from
-pic_list = os.listdir('./pics')
+pic_list = os.listdir(PICS_DIR)
 print(f"PICS: {list_to_csv(pic_list)}")
 
 # Get user choice of pic
