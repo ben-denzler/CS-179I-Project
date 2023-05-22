@@ -3,6 +3,7 @@ import subprocess
 import os
 from torchvision import models
 
+SERVER_URL = 'http://localhost:5000/predict'
 CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
 CLASSES_FILE = 'imagenet-classes.txt'
 PICS_DIR = './pics'
@@ -50,18 +51,21 @@ while user_pic not in pic_list:
     user_pic = input("That's not a valid pic, please try again: ")
 
 # Get number of requests
-print("\nChoose the number of requests to send: ")
+print("\nChoose the number of requests to send: ", end='')
 num_requests = get_positive_integer()
 
 # Send POST request to the `predict` endpoint
-print(f"\nSending request for pic {user_pic} with model {user_model}...")
-url = 'http://localhost:5000/predict'
-files = {'image': ('dog.jpg', open('pics/dog.jpg', 'rb'), 'image/jpeg')}
-try:
-    response = requests.post(url, files=files)
-    if response.ok:
-        result = response.json()
-        print(f'Predicted class: {result["class"]}, confidence: {result["confidence"]}')
-except requests.exceptions.RequestException as e:
-    print("An error occurred while sending the request!")
-    print(f"Error: {str(e)}")
+for i in range(num_requests):
+    print(f"\nSending request {i} for pic {user_pic} with model {user_model}...")
+    pic_path = PICS_DIR + '/' + user_pic
+    files = {'image': (user_pic, open(pic_path, 'rb'), 'image/jpeg')}
+    data = {'model': user_model}
+    try:
+        response = requests.post(SERVER_URL, files=files, data=data)
+        if response.ok:
+            result = response.json()
+            print(f'Predicted class: {result["class"]}, confidence: {result["confidence"]}')
+    except requests.exceptions.RequestException as e:
+        print("An error occurred while sending the request!")
+        print(f"Error: {str(e)}")
+        exit(1)
