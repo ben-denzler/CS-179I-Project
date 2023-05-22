@@ -1,6 +1,8 @@
 import requests
 import subprocess
 import os
+import statistics
+from time import time
 from torchvision import models
 
 SERVER_URL = 'http://localhost:5000/predict'
@@ -57,18 +59,29 @@ while user_pic not in pic_list:
 print("\nChoose the number of requests to send: ", end='')
 num_requests = get_positive_integer()
 
+pic_path = PICS_DIR + '/' + user_pic
+execution_times = []
+files = {'image': (user_pic, open(pic_path, 'rb'), 'image/jpeg')}
+# data = {'model': user_model}
+
 # Send POST request to the server
 for i in range(num_requests):
     print(f"\nSending request {i+1} for pic {user_pic}...")
-    pic_path = PICS_DIR + '/' + user_pic
-    files = {'image': (user_pic, open(pic_path, 'rb'), 'image/jpeg')}
-    # data = {'model': user_model}
     try:
+        start_time = time()
         response = requests.post(SERVER_URL, files=files)
+        elapsed_time = time() - start_time
+        execution_times.append(elapsed_time)
         if response.ok:
             result = response.json()
             print(f'Predicted class: {result["class"]}, confidence: {result["confidence"]}')
+            print(f"Execution time: {round(elapsed_time, 4)}s")
+        else:
+            print(f"An error occurred with code: {response.status_code}")
     except requests.exceptions.RequestException as e:
         print("An error occurred while sending the request!")
         print(f"Error: {str(e)}")
         exit(1)
+
+average_time = statistics.mean(execution_times)
+print(f"\nAverage execution time: {round(average_time, 4)}s")
