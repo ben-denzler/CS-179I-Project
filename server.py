@@ -40,7 +40,7 @@ def predict():
     out = model(batch_t)
 
     # Load the ImageNet class labels and find the predicted class index and percentage confidence
-    with open('imagenet-classes.txt') as labels:
+    with open(CLASSES_FILE) as labels:
         classes = [line.strip() for line in labels.readlines()]
     _, index = torch.max(out, 1)
     percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
