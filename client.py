@@ -4,7 +4,8 @@ import os
 import statistics
 from time import time
 
-SERVER_URL = 'http://127.0.0.1:5000/predict'
+# SERVER_URL = 'http://127.0.0.1:5000/predict'
+SERVER_URL = 'http://128.110.218.71:30805/predict'
 CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
 CLASSES_FILE = 'imagenet-classes.txt'
 PICS_DIR = './pics'
@@ -51,10 +52,11 @@ execution_times = []
 # Send POST request to the server
 for i in range(num_requests):
     files = {'image': (user_pic, open(pic_path, 'rb'), 'image/jpeg')}
+    headers = {'Host': 'cs179i-project.default.example.com'}
     print(f"\nSending request {i+1} for pic {user_pic}...")
     try:
         start_time = time()
-        response = requests.post(SERVER_URL, files=files)
+        response = requests.post(SERVER_URL, files=files, headers=headers)
         elapsed_time = time() - start_time
         execution_times.append(elapsed_time)
         if response.ok:
