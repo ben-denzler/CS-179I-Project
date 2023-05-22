@@ -5,10 +5,13 @@ from flask import Flask, request, jsonify
 from torchvision import models, transforms
 from PIL import Image
 
+CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
+CLASSES_FILE = 'imagenet-classes.txt'
+
 # Download imagenet-classes.txt if it doesn't exist
-if not os.path.exists('imagenet-classes.txt'):
+if not os.path.exists(CLASSES_FILE):
     print("Downloading ImageNet classes file...")
-    subprocess.run(['wget', 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'])
+    subprocess.run(['wget', CLASSES_URL])
 
 # Load the pre-trained AlexNet model
 model = models.alexnet(pretrained=True)

@@ -54,7 +54,7 @@ while user_pic not in pic_list:
 print("\nChoose the number of requests to send: ", end='')
 num_requests = get_positive_integer()
 
-# Send POST request to the `predict` endpoint
+# Send POST request to the server
 for i in range(num_requests):
     print(f"\nSending request {i} for pic {user_pic} with model {user_model}...")
     pic_path = PICS_DIR + '/' + user_pic
