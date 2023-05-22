@@ -59,7 +59,7 @@ for i in range(num_requests):
         execution_times.append(elapsed_time)
         if response.ok:
             result = response.json()
-            print(f'Predicted class: {result["class"]}, confidence: {result["confidence"]}')
+            print(f'Predicted class: {result["class"]}, confidence: {round(result["confidence"], 2)}%')
             print(f"Execution time: {round(elapsed_time, 4)}s")
         else:
             print(f"An error occurred with code: {response.status_code}")
