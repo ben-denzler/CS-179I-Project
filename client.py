@@ -4,7 +4,7 @@ import os
 import statistics
 from time import time
 
-SERVER_URL = 'http://localhost:5000/predict'
+SERVER_URL = 'http://127.0.0.1:5000/predict'
 CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
 CLASSES_FILE = 'imagenet-classes.txt'
 PICS_DIR = './pics'
