@@ -80,7 +80,9 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
     concurrent.futures.wait(futures)
 total_time_end = time()
 
+# Output statistics
 average_time = statistics.mean(execution_times)
 total_time = total_time_end - total_time_start
 print(f"\nAverage execution time: {round(average_time, 4)}s")
 print(f"Total time to process all requests: {round(total_time, 4)}s")
+print(f"Total number of execution times: {len(execution_times)}")
