@@ -72,11 +72,15 @@ print("Choose the number of requests to send: ", end='')
 num_requests = get_positive_integer()
 
 # Send each request as a new thread
+total_time_start = time()
 with concurrent.futures.ThreadPoolExecutor() as executor:
     futures = []
     for i in range(num_requests):
         futures.append(executor.submit(send_request, i=i, user_pic=user_pic))
     concurrent.futures.wait(futures)
+total_time_end = time()
 
 average_time = statistics.mean(execution_times)
+total_time = total_time_end - total_time_start
 print(f"\nAverage execution time: {round(average_time, 4)}s")
+print(f"Total time to process all requests: {round(total_time, 4)}s")
