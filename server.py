@@ -13,8 +13,10 @@ if not os.path.exists(CLASSES_FILE):
     print("Downloading ImageNet classes file...")
     subprocess.run(['wget', CLASSES_URL])
 
-# Load the pre-trained AlexNet model
-model = models.alexnet(pretrained=True)
+# Load the pre-trained models
+alexnet = models.alexnet(pretrained=True)
+squeezenet = models.squeezenet1_0(pretrained=True)
+mobilenet = models.mobilenet_v3_small(pretrained=True)
 
 # Define image transformation pipeline
 transform = transforms.Compose([
@@ -48,8 +50,19 @@ def predict():
         batch_t = torch.unsqueeze(img_t, 0)
 
         # Set the model to evaluation mode and run the input image batch through it
-        model.eval()
-        out = model(batch_t)
+
+        user_model = request.form['model']
+        if user_model == "AlexNet":
+            alexnet.eval()
+            out = alexnet(batch_t)
+        elif user_model == "SqueezeNet":
+            squeezenet.eval()
+            out = squeezenet(batch_t)
+        elif user_model == "MobileNet":
+            mobilenet.eval()
+            out = mobilenet(batch_t)
+        else:
+            raise Exception(f"Couldn't parse the specified model {user_model}!")
 
         # Load the ImageNet class labels and find the predicted class index and percentage confidence
         with open(CLASSES_FILE) as labels:
@@ -58,7 +71,7 @@ def predict():
         percentage = torch.nn.functional.softmax(out, dim=1)[0] * 100
 
         # Return the predicted class label and percentage confidence to the client
-        return jsonify({'class': classes[index[0]], 'confidence': percentage[index[0]].item()})
+        return jsonify({'class': classes[index[0]], 'confidence': percentage[index[0]].item(), 'model': user_model})
     
     except Exception as e:
         return handle_exception(e)
