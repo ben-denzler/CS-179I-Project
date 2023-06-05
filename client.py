@@ -3,7 +3,7 @@ import concurrent.futures
 import subprocess
 import os
 import statistics
-from time import time
+from time import time, sleep
 
 SERVER_URL = 'http://127.0.0.1:5000/predict'
 # SERVER_URL = 'http://128.110.218.71:30805/predict'
@@ -12,6 +12,7 @@ CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/exam
 CLASSES_FILE = 'imagenet-classes.txt'
 PICS_DIR = './pics'
 execution_times = []
+times_to_sleep = [1, 2, 4, 2, 5, 5, 3, 1, 4, 5]
 
 # Sends POST request for image recognition
 def send_request(i, pic, model):
@@ -77,11 +78,18 @@ user_model = input("Choose a model: ")
 while user_model not in model_list:
     user_model = input("That's not a valid model, please try again: ")
 
+# Choose whether to wait between requests
+wait_choice = input("Wait between requests? (Yes/No): ").strip().lower()
+while wait_choice != "yes" and wait_choice != "no":
+    wait_choice = input("That's not a valid choice, please try again (Yes/No): ").strip().lower()
+
 # Send each request as a new thread
 total_time_start = time()
 with concurrent.futures.ThreadPoolExecutor() as executor:
     futures = []
     for i in range(num_requests):
+        if wait_choice == "yes":
+            sleep(times_to_sleep[i])
         futures.append(executor.submit(send_request, i=i, pic=user_pic, model=user_model))
     concurrent.futures.wait(futures)
 total_time_end = time()
