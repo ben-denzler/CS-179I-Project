@@ -8,6 +8,7 @@ spec:
     metadata:
       annotations:
         autoscaling.knative.dev/target: "75"
+        autoscaling.knative.dev/minScale: "1"
     spec:
       containers:
         - image: bdenz001/cs179i-project:0.0.2.RELEASE

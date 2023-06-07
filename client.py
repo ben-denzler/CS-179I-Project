@@ -7,7 +7,7 @@ import csv
 from time import time, sleep
 
 SERVER_URL = 'http://127.0.0.1:5000/predict'
-# SERVER_URL = 'http://128.110.218.71:30805/predict'
+# SERVER_URL = 'http://128.110.218.63:32676/predict'
 HOST_NAME = 'cs179i-project.default.example.com'
 CLASSES_URL = 'https://raw.githubusercontent.com/xmartlabs/caffeflow/master/examples/imagenet/imagenet-classes.txt'
 CLASSES_FILE = 'imagenet-classes.txt'
