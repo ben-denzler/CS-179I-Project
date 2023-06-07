@@ -1,5 +1,5 @@
-# Use Python 3.9 as the base image
-FROM python:3.9
+# Use Python 3.6.9 as the base image
+FROM python:3.6.9
 
 # Copy the directory to /app
 WORKDIR /app
