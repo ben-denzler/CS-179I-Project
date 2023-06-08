@@ -25,10 +25,7 @@ def send_request(i, pic, model):
     headers = {'Host': HOST_NAME}
     try:
         response = requests.post(SERVER_URL, data=data, files=files, headers=headers)
-        if response.ok:
-            result = response.json()
-            # print(f"Predicted class for {result['model']} request {i}: {result['class']}, confidence: {round(result['confidence'], 2)}%")
-        else:
+        if not response.ok:
             print(f"An error occurred with code: {response.status_code}")
     except requests.exceptions.RequestException as e:
         print("An exception occurred while sending the request!")
