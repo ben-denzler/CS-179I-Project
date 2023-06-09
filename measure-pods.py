@@ -26,9 +26,9 @@ def output_csv(filename):
 
 try:
     print("Collecting data... Use Ctrl + C to stop.")
+    config.load_kube_config()
+    kube_client = client.CoreV1Api()
     while True:
-        config.load_kube_config()
-        kube_client = client.CoreV1Api()
         # Count number of running pods for our service
         pods = kube_client.list_namespaced_pod(kube_namespace, label_selector=f"serving.knative.dev/service={kube_service_name}")
         active_pod_count = len([pod for pod in pods.items if pod.status.phase == "Running"])
