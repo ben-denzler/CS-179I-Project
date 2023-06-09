@@ -1,4 +1,4 @@
-mountain.jpg
-10000
-MobileNet
+clock.jpg
+10
+AlexNet
 No
