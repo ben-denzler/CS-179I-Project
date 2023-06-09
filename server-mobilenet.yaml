@@ -12,6 +12,6 @@ spec:
         autoscaling.knative.dev/maxScale: "20"
     spec:
       containers:
-        - image: bdenz001/cs179i-project:0.0.2.RELEASE
+        - image: bdenz001/cs179i-project:0.0.2.mobilenet
           ports:
             - containerPort: 5000
