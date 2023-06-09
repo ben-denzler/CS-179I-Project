@@ -15,7 +15,7 @@ PICS_DIR = './pics'
 FILENAME = "./data/execution_time_data.csv"
 times = []
 execution_times = []
-times_to_sleep = [1, 2, 4, 2, 5, 5, 3, 1, 4, 5]
+times_to_sleep = [0.1, 0.2, 0.4, 0.2, 0.5, 0.5, 0.3, 0.1, 0.4, 0.5]
 
 # Sends POST request for image recognition
 def send_request(i, pic, model):
@@ -100,7 +100,7 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
     futures = []
     for i in range(num_requests):
         if wait_choice == "yes":
-            sleep(times_to_sleep[i])
+            sleep(times_to_sleep[i % len(times_to_sleep)])
         futures.append(executor.submit(send_request, i=i, pic=user_pic, model=user_model))
     concurrent.futures.wait(futures)
 total_time_end = time()
