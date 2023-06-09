@@ -15,7 +15,6 @@ interval = 0.5  # Seconds to wait between pod count queries
 
 times = []
 num_pods = []
-start_time = time()
 
 def output_csv(filename):
     with open(filename, "w", newline="") as file:
@@ -28,6 +27,7 @@ try:
     print("Collecting data... Use Ctrl + C to stop.")
     config.load_kube_config()
     kube_client = client.CoreV1Api()
+    start_time = time()
     while True:
         # Count number of running pods for our service
         pods = kube_client.list_namespaced_pod(kube_namespace, label_selector=f"serving.knative.dev/service={kube_service_name}")
